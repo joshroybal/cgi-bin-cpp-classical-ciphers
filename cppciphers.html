@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" media="all"  href="includes/style.css">
+<title>cgi-bin C++ classical ciphers</title>
+</head>
+<body>
+<header><p>cgi-bin programming with C++</p></header>
+<div><a href="/index.php">Home</a></div>
+<h1>cgi-bin C++ classical ciphers</h1>
+
+
+<p>unless otherwise noted enter the key as all lowercase alphabetic characters</p>
+<form action = "cgi-bin/cppciphers.cgi?step1" method = "POST" accept-charset="utf-8">
+
+<div>Cipher</div>
+ 
+<div>
+<label>
+<input type="radio" name="cipher" value="coltran">
+Simple columnar transposition. (Key is integer.)
+</label>
+</div>
+
+<div>
+<label>
+<input type="radio" name="cipher" value="keytran">
+Keyword determined columnar transposition. (Key is lowercase aphabetic textstring.)
+</label>
+</div>
+
+<!--div>
+<label>
+<input type="radio" name="cipher" value="ubchi"
+>
+Übchi - keyword determined columnar transposition. (Key is lowercase aphabetic textstring.)
+</label>
+</div-->
+
+<div>
+<label>
+<input type="radio" name="cipher" value="Caesar">
+Caesar (Key is integer.)
+</label>
+</div>
+
+<div>
+<label>
+<input type="radio" name="cipher" value="Affine">
+Affine (Key is two integers, first relatively prime to 26.)
+</label>
+</div>
+
+<div>
+<label>
+<input type="radio" name="cipher" value="keysub">
+Simple keyword substitution. (Key is lowercase alphabetic textstring.)
+</label>
+</div>
+
+<div>
+<label>
+<input type="radio" name="cipher" value="Vigenere">
+Vigenere (Key is lowercase alphabetic textstring.)
+</label>
+</div>
+
+<div>
+<label>
+<input type="radio" name="cipher" value="Gronsfeld">
+Gronsfeld (Key is numeric textstring.)
+</label>
+</div>
+
+<div>
+<label>
+<input type="radio" name="cipher" value="Porta">
+Porta (Key is lowercase alphabetic textstring.)
+</label>
+</div>
+
+<div>
+<label>
+<input type="radio" name="cipher" value="Beaufort">
+Beaufort / Cipher Disk (Key is lowercase alphabetic textstring.)
+</label>
+</div>
+
+<div>
+<label>
+<input type="radio" name="cipher" value="Variant">
+Beaufort variant (Key is lowercase alphabetic textstring.)
+</label>
+</div>
+
+<div>
+<label>
+<input type="radio" name="cipher" value="SlideI">
+Slide Type I (Key is lowercase alphabetic textstring.)
+</label>
+</div>
+
+<div>
+<label>
+<input type="radio" name="cipher" value="SlideII">
+Slide Type II (Key is lowercase alphabetic textstring.)
+</label>
+</div>
+
+<div>
+<label>
+<input type="radio" name="cipher" value="SlideIII">
+Slide Type III (Key is lowercase alphabetic textstring.)
+</label>
+</div>
+
+<div>Key type (Affects only Vigenere, Beaufort and Variant.)</div>
+<div><label><input type="radio" name="keytype" value="regular" checked>regular</label></div>
+<div><label><input type="radio" name="keytype" value="auto">automatic</label></div>
+<div><label><input type="radio" name="keytype" value="prog">progressive</label></div>
+
+
+<div>Action</div>
+<div><label><input type="radio" name="action" value="encrypt" checked>encrypt</label></div>
+<div><label><input type="radio" name="action" value="decrypt">decrypt</label></div>
+<div>Key: <input type = "text" name = "keystring" size="50" value = ""></div>
+<div>Message</div>
+<div><textarea name = "message" rows="12" cols="80" ></textarea></div>
+<div><input type = "submit" value = "Submit"></div>
+</form>
+<div><a href="/index.php">Home</a></div>
+<footer><p>CopyLeft 2017 Josh Roybal - all wrongs reserved</p></footer>
+</body>
+</html>
+
