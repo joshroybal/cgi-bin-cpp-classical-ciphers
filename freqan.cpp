@@ -115,7 +115,6 @@ void FrequencyAnalyzer::compute_frequencies()
 // method computes index of coincidence of text buffer
 float FrequencyAnalyzer::index_of_coincidence() const
 {
-   int n = text_buffer.length();
    float s = 0;
    for (int i = 0; i < C; i++)
       s += (float)count[i] * (float)(count[i] - 1);
