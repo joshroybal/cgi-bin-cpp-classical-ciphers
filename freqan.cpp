@@ -9,8 +9,8 @@
 // method parses text buffer
 void FrequencyAnalyzer::readBuffer(const std::string& buf)
 {
-   // int n = buf.length();
    n = 0;
+   text_buffer = "";
    for (int i = 0; i < buf.length(); i++)
       if (isalpha(buf[i])) {
          ++n;
