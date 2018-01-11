@@ -2,19 +2,19 @@
 #include "hypertext.hpp"
 
 // print top of html page
-void printPageTop()
+void printPageTop(const std::string& header)
 {
    std::cout << "<!DOCTYPE HTML>\n";
    std::cout << "<html>\n";
    std::cout << "<head>\n";
    std::cout << "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
-   std::cout << "<link rel=\"stylesheet\" media=\"all\"  href=\"gradienttable.css\">\n";
-   std::cout << "<title>cgi-bin C++ classical ciphers</title>\n";
+   std::cout << "<link rel='stylesheet' media='all'  href='/includes/gradienttable.css'>\n";
+   std::cout << "<title>" << header << "</title>\n";
    std::cout << "</head>\n";
    std::cout << "<body>\n";
-   std::cout << "<header><p>cgi-bin C++ classical ciphers</p></header>\n";
+   std::cout << "<header><p>" << header << "</p></header>\n";
    std::cout << "<p></p>\n";
-   std::cout << "<div><a href=\"/index.php\">Home</a> | <a href=\"/cppciphers.html\">Back</a></div>\n";
+   std::cout << "<div><a href=\"/index.php\">Home</a></div>\n";
    std::cout << "<p></p>\n";
 }
 

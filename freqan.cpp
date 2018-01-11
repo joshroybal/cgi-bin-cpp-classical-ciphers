@@ -9,12 +9,12 @@
 // method parses text buffer
 void FrequencyAnalyzer::readBuffer(const std::string& buf)
 {
-   n = 0;
-   text_buffer = "";
+   text_buffer = ""; // clear text buffer - it's nice to be able to reuse methods!
+   int n = 0;
    for (int i = 0; i < buf.length(); i++)
       if (isalpha(buf[i])) {
-         ++n;
          text_buffer += toupper(buf[i]);
+         ++n;
       }
    compute_frequencies();
 }
@@ -29,6 +29,19 @@ float FrequencyAnalyzer::indexOfCoincidence() const
 float FrequencyAnalyzer::englishCorrelation() const
 {
    return english_correlation();
+}
+
+// display freqency analysis stats in html list format
+void FrequencyAnalyzer::showStats() const
+{
+   // emit html list
+   std::cout << std::fixed;
+   std::cout.precision(3);
+   std::cout << "<ul>\n";
+   std::cout << "<li>no. of characters processed = " << n << "</li>\n";
+   std::cout << "<li>index of coincidence = " << indexOfCoincidence() << "</li>\n";
+   std::cout << "<li>english plaintext correlation = " << englishCorrelation() << "</li>\n";
+   std::cout << "</ul>\n";
 }
 
 // display raw count of counted occurences of letters
@@ -103,7 +116,7 @@ void FrequencyAnalyzer::compute_frequencies()
    for (int i = 0; i < text_buffer.length(); i++) {
       if (isalpha(text_buffer[i])) {
          ++n;
-         int idx = toupper(text_buffer[i]) - 65;
+         int idx = text_buffer[i] - 65;
          ++(count[idx]);
       }
    }

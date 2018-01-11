@@ -1,5 +1,5 @@
-#ifndef FREQAN_HPP__
-#define FREQAN_HPP__
+#ifndef FREQAN_HPP
+#define FREQAN_HPP
 
 #include <string>
 #include "cipher.hpp"
@@ -15,6 +15,7 @@ public:
    void readBuffer(const std::string&);
    float indexOfCoincidence() const;
    float englishCorrelation() const;
+   void showStats() const;
    void showCounts() const;
    void cipherReport(const Cipher&);
 private:

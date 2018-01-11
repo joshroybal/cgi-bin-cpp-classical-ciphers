@@ -1,9 +1,9 @@
-#ifndef HYPERTEXT_HPP__
-#define HYPERTEXT_HPP__
+#ifndef HYPERTEXT_HPP
+#define HYPERTEXT_HPP
 
 #include <string>
 
-void printPageTop();
+void printPageTop(const std::string&);
 void printButton(const std::string&, const std::string&, const std::string&,
                   bool);
 void printPageBottom();

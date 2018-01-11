@@ -7,11 +7,21 @@
 // Cipher class public methods
 
 // read piped input from stdin into core memory
-void Cipher::readBuf(const std::string& message)
+void Cipher::readBuf()
 {
-   for (int i = 0; i < message.length(); i++) 
-      if (isalpha(message[i]))
-         inbuf += toupper(message[i]);
+   std::string line;
+   while (std::getline(std::cin, line)) {
+      int n = line.length();
+      for (int i = 0; i < n; i++)
+         if (isalpha(line[i]))
+            inbuf += toupper(line[i]);
+   }
+}
+
+// assign string to input buffer
+void Cipher::readBuf(const std::string& str)
+{
+   inbuf = str;
 }
 
 // process input read into buffer
@@ -53,35 +63,48 @@ void Cipher::processBuf(const std::string& cipher, const std::string& flag,
       Variant(keystr, flag, autokey, progkey);
    else if (cipher == "SlideI" || cipher == "SlideII"
             || cipher == "SlideIII") {
-      // clean up the cgi stuff from the keystring
-      int n = keystr.length();
-      for (int i = 0; i < n; i++)
-         if (!isalpha(keystr[i]))
-            keystr[i] = ' ';
       std::istringstream ss(keystr);
       std::string primary, secondary;
-      ss >> primary >> secondary;      
+      ss >> primary >> secondary;
       if (secondary == "") secondary = primary;
       Slide(primary, secondary, flag, cipher, autokey, progkey);
    }
-
+   // set to lowercase if flag is decrypt
    if (flag == "decrypt")
       std::transform(outbuf.begin(), outbuf.end(), outbuf.begin(), ::tolower);
+   // append newlines in core
+   size_t idx = 0;
+   while (outbuf[idx++] != '\0')
+      if ((idx+1) % 79 == 0)
+         outbuf.insert(idx, "\n");
 }
 
 // write output buffer to stdout
 void Cipher::writeBuf() const
 {
-   // append newlines in core
-   int n = outbuf.length();
-   std::string fmtbuf;
-   for (int i = 0; i < n; i++) {
-      fmtbuf += outbuf[i];
-      if ((i+1) % 78 == 0)
-         fmtbuf += '\n';
+   std::cout << outbuf << std::endl;
+}
+
+std::string Cipher::Affine(const std::string& flag, int a, int b)
+{
+   if (flag == "decrypt") { // convert a, b to a^-1 and a^-1 x -b
+      int ainv;
+      int n = 1;
+      while (n < RANGE) {
+         if (a*n % RANGE == 1) {
+            ainv = n;
+            break;
+         }
+         n += 2;
+         if (n == RANGE / 2) n += 2;
+      }
+      a = ainv;
+      b = (ainv*-b) % RANGE;
    }
-   // write output
-   std::cout << fmtbuf << std::endl;
+   std::string result;
+   for (int i = 0; i < inbuf.length(); i++)
+      result += affine(inbuf[i], a, b);
+   return result;
 }
 
 // Cipher class private methods
@@ -437,7 +460,6 @@ void Cipher::Variant(const std::string& keystr, const std::string& flag,
 }
 
 // mixed slide cipher method
-// Gaines I - plaintext slides against ciphertext
 void Cipher::Slide(const std::string& primary, const std::string& secondary,
                      const std::string& flag, const std::string& cipher,
                      bool autokey, bool progkey)

@@ -1,5 +1,5 @@
-#ifndef CIPHER_HPP__
-#define CIPHER_HPP__
+#ifndef CIPHER_HPP
+#define CIPHER_HPP
 
 #include <string>
 
@@ -10,9 +10,13 @@ const int RANGE = 26;      // 26 classical 95 ascii
 class Cipher {
 public:
    friend class FrequencyAnalyzer;
+   void readBuf();
    void readBuf(const std::string&);
    void processBuf(const std::string&, const std::string&, std::string&, bool, bool);
    void writeBuf() const;
+   std::string getinBuf() { return inbuf; }
+   std::string getoutBuf() { return outbuf; }
+   std::string Affine(const std::string&, int, int);
 private:
    // private data
    std::string inbuf;

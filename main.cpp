@@ -40,9 +40,9 @@ int main()
       std::string action = readFormValue(formData, "action");
       // get keystring
       std::string keystring = readFormValue(formData, "keystring");
+      stripMessage(keystring);
       // get message
       std::string message = readFormValue(formData, "message");
-      // message = parseMessage(message);
       stripMessage(message);
 
       // trap for error and show user usage message
@@ -52,13 +52,11 @@ int main()
          && cipher != "Variant" && cipher != "SlideI" && cipher != "SlideII" 
          && cipher != "SlideIII")
       {
-         std::cout << "1000\n";
          errMsg();
          printPageBottom();
          return 1;
       }
       if (action != "encrypt" && action != "decrypt") {
-         std::cout << "2000\n";
          errMsg();
          printPageBottom();
          return 1;
@@ -69,6 +67,14 @@ int main()
       if (keytype == "auto") autokey = true;
       if (keytype == "prog") progkey = true;
       
+      // check for empty, or too long, keystring
+      if (keystring.length() == 0 || keystring.length() > C) {
+         errMsg();
+         printPageBottom();
+         return 1;
+      }
+
+
       // ready, steady, go
       Cipher machine;
       // read stdin to input buffer
@@ -76,7 +82,6 @@ int main()
       // process buffer in core
       machine.processBuf(cipher, action, keystring, autokey, progkey);
       // print html form
-      // printForm(machine, action);
       std::cout << "<form action='cppciphers.cgi?step1' method ='POST' accept-charset='utf-8'>\n";
       // print cipher choice radio buttons
       std::cout << "Cipher\n";
