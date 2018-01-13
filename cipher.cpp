@@ -107,6 +107,34 @@ std::string Cipher::Affine(const std::string& flag, int a, int b)
    return result;
 }
 
+std::string Cipher::AutoAffine(const std::string& action, int a, int b, 
+                                 bool cipherdisk)
+{
+   if (action == "decrypt") { // convert a, b to a^-1 and a^-1 x -b
+      int ainv;
+      int n = 1;
+      while (n < RANGE) {
+         if (a*n % RANGE == 1) {
+            ainv = n;
+            break;
+         }
+         n += 2;
+         if (n == RANGE / 2) n += 2;
+      }
+      a = ainv;
+      b = (ainv*-b) % RANGE;
+   }
+   std::string result;
+   for (int i = 0; i < inbuf.length(); i++) {
+      result += affine(inbuf[i], a, b);
+      if (cipherdisk)
+         b = (result[i] - 65) - 1;
+      else
+         b = 26 - (result[i] - 65);
+   }
+   return result;
+}
+
 // Cipher class private methods
 
 // Cipher class private auxiliary methods

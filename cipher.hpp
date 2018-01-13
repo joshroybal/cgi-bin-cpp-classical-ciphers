@@ -17,6 +17,7 @@ public:
    std::string getinBuf() { return inbuf; }
    std::string getoutBuf() { return outbuf; }
    std::string Affine(const std::string&, int, int);
+   std::string AutoAffine(const std::string&, int, int, bool);
 private:
    // private data
    std::string inbuf;

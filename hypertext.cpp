@@ -35,7 +35,7 @@ void printButton(const std::string& name, const std::string& value,
 void printPageBottom()
 {
    std::cout << "<p></p>\n";
-   std::cout << "<div><a href=\"/index.php\">Home</a> | <a href=\"/cppciphers.html\">Back</a></div>\n";
+   std::cout << "<div><a href=\"/index.php\">Home</a></div>\n";
    std::cout << "<footer><p>Copyright (c) 2017 Josh Roybal.</p></footer>\n";
    std::cout << "<p></p>\n";
    std::cout << "</body>\n";
