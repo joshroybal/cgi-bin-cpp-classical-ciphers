@@ -25,7 +25,7 @@ void errMsg();
 
 int main()
 {
-   char card[257];   
+   char card[257];
    std::string cipher, flag, keystr;
 
    readQueryString(card);
@@ -54,7 +54,7 @@ int main()
       freqan.showCounts();
       // begin attack processing
       Cipher decryptor;
-      
+
       // begin autokey attacks
       // Vigenere pass
       // std::cout << "<div>Vigenere autokey attack pass.</div>\n";
@@ -84,7 +84,7 @@ int main()
          for (int j = 0; j < message.length(); j += p)
             slice += message[j];
          freqan.readBuffer(slice);
-         if (freqan.indexOfCoincidence() >= 1.5) {
+         if (freqan.indexOfCoincidence() >= 1.6) {
             trial_period = p;
             break;
          }
@@ -107,7 +107,7 @@ int main()
       // end attack processing
       // print bottom of page
       printPageBottom();
-   }   
+   }
    return 0;
 }
 
