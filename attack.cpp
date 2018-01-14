@@ -169,12 +169,12 @@ bool runDown(keyrow table[], const std::string& buf, int p)
             }
          }
       }
+      if (mindev > .007F)
+         return false;
       trial_slice = decryptor.Affine("decrypt", best_a, best_b);
       freqan.readBuffer(trial_slice);
       ioc = freqan.indexOfCoincidence();
       cor = freqan.englishCorrelation();
-      if (ioc < 1.6 || cor < .06)
-         return false;
       table[i].a = best_a;
       table[i].b = best_b;
       table[i].ioc = ioc;
