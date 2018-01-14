@@ -18,15 +18,16 @@ struct keyrow {
 float correlation(const float [], int);
 std::string formatStr(const std::string&);
 std::string autoKey(const std::string&);
-bool autoKey(keyrow[], const std::string&, int p, bool);
-void runDown(keyrow[], const std::string&, const std::string&, int);
+bool runDown(keyrow[], const std::string&, int);
+bool autoKey(keyrow[], const std::string&, int, bool);
 void readData();
 void errMsg();
 
 int main()
 {
-   char card[257];
+   char card[257];   
    std::string cipher, flag, keystr;
+   keyrow table[C * C];
 
    readQueryString(card);
    std::cout << "Content-Type: text/html; charset=utf-8\n\n";
@@ -39,8 +40,6 @@ int main()
       // get message
       std::string message = readFormValue(formData, "message");
       stripMessage(message);
-
-      keyrow table[C * C];
       // check buffer
       int substrlen = C * C;
       if (message.length() < substrlen)
@@ -54,7 +53,7 @@ int main()
       freqan.showCounts();
       // begin attack processing
       Cipher decryptor;
-
+      
       // begin autokey attacks
       // Vigenere pass
       // std::cout << "<div>Vigenere autokey attack pass.</div>\n";
@@ -103,11 +102,15 @@ int main()
       // 'run down' the alphabets
       int n = slice.length();
       std::string plaintext(message.length(), ' ');
-      runDown(table, message, "least deviation", trial_period);
+      if (!runDown(table, message, trial_period)) {
+         errMsg();
+         printPageBottom();
+         return 1;
+      }
       // end attack processing
       // print bottom of page
       printPageBottom();
-   }
+   }   
    return 0;
 }
 
@@ -132,13 +135,11 @@ float correlation(const float frequencies[], int n)
    return result;
 }
 
-void runDown(keyrow table[], const std::string& buf,
-               const std::string& flag, int p)
+bool runDown(keyrow table[], const std::string& buf, int p)
 {
    const float ENG_COR = correlation(english, C);
    int best_a, best_b;
-   float ioc, cor, mindev, maxcor;
-   bool breakout;
+   float ioc, cor, mindev;
    Cipher decryptor;
    FrequencyAnalyzer freqan;
    int n = buf.length();
@@ -151,8 +152,6 @@ void runDown(keyrow table[], const std::string& buf,
       decryptor.readBuf(trial_slice);
       // initialize rundown values
       mindev = ENG_COR;
-      maxcor = 0;
-      breakout = false;
       best_a = 1;
       best_b = 0;
       // construct a trial slice 'runnning down' the affine and linear mappings of the alphabet
@@ -162,37 +161,24 @@ void runDown(keyrow table[], const std::string& buf,
             std::string test_slice = decryptor.Affine("decrypt", a, b);
             freqan.readBuffer(test_slice);
             cor = freqan.englishCorrelation();
-            if (flag == "least deviation") {
-               float dev = std::abs(ENG_COR - cor);
-               if (dev < mindev) {
-                  mindev = dev;
-                  best_a = a;
+            float dev = std::abs(ENG_COR - cor);
+            if (dev < mindev) {
+               mindev = dev;
+               best_a = a;
                   best_b = b;
-               }
-            } else if (flag == "maximum correlation") {
-               if (cor > maxcor) {
-                  maxcor = cor;
-                  best_a = a;
-                  best_b = b;
-               }
-            } else {
-               if (cor >= .062) {
-                  best_a = a;
-                  best_b = b;
-                  breakout = true;
-                  break;
-               }
             }
          }
-         if (breakout)
-            break;
       }
       trial_slice = decryptor.Affine("decrypt", best_a, best_b);
       freqan.readBuffer(trial_slice);
+      ioc = freqan.indexOfCoincidence();
+      cor = freqan.englishCorrelation();
+      if (ioc < 1.6 || cor < .06)
+         return false;
       table[i].a = best_a;
       table[i].b = best_b;
-      table[i].ioc = freqan.indexOfCoincidence();
-      table[i].cor = freqan.englishCorrelation();
+      table[i].ioc = ioc;
+      table[i].cor = cor;
       table[i].n = trial_slice.length();
       int idx = 0;
       for (int j = i; j < n; j += p)
@@ -224,15 +210,14 @@ void runDown(keyrow table[], const std::string& buf,
       std::cout << "</tr>\n";
    }
    std::cout << "</table>\n";
-   std::cout << "<p>" << flag << " trial plaintext</p>\n";
+   std::cout << "<p>trial plaintext</p>\n";
    std::cout << "<textarea rows = '12' cols = '80'>\n";
    std::cout << formatStr(plaintext) << std::endl;
    std::cout << "</textarea>\n";
-   // std::cout << "<pre>" << formatStr(plaintext).substr(0, substrlen) << " . . . </pre>\n";
-   // std::cout << "<p></p>\n";
    freqan.readBuffer(plaintext);
    freqan.showStats();
    freqan.showCounts();
+   return true;
 }
 
 bool autoKey(keyrow table[], const std::string& buf, int p, bool cipherdisk)
