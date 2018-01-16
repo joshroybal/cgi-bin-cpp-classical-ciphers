@@ -143,12 +143,14 @@ bool runDown(keyrow table[], const std::string& buf, int p)
    Cipher decryptor;
    FrequencyAnalyzer freqan;
    int n = buf.length();
-   std::string plaintext(buf.length(), ' ');
    for (int i = 0; i < p; i++) {
       // do something
       std::string trial_slice;
-      for (int j = i; j < n; j += p)
+      int idx = 0;
+      for (int j = i; j < n && idx < 200; j += p) {
          trial_slice += buf[j];
+         ++idx;
+      }
       decryptor.readBuf(trial_slice);
       // initialize rundown values
       mindev = ENG_COR;
@@ -169,7 +171,7 @@ bool runDown(keyrow table[], const std::string& buf, int p)
             }
          }
       }
-      if (mindev > .007F)
+      if (mindev > .01F)
          return false;
       trial_slice = decryptor.Affine("decrypt", best_a, best_b);
       freqan.readBuffer(trial_slice);
@@ -180,13 +182,19 @@ bool runDown(keyrow table[], const std::string& buf, int p)
       table[i].ioc = ioc;
       table[i].cor = cor;
       table[i].n = trial_slice.length();
+   }
+   // decrypt
+   std::string plaintext(n, ' ');
+   for (int i = 0; i < p; i++) {
+      std::string ciphertext_slice;
+      for (int j = i; j < n; j += p)
+         ciphertext_slice += buf[j];
+      decryptor.readBuf(ciphertext_slice);
+      std::string plaintext_slice = decryptor.Affine("decrypt", table[i].a, table[i].b);
       int idx = 0;
       for (int j = i; j < n; j += p)
-         plaintext[j] = tolower(trial_slice[idx++]);
-   }
-   int substrlen = C * C;
-   if (plaintext.length() < substrlen)
-      substrlen = plaintext.length();
+         plaintext[j] = tolower(plaintext_slice[idx++]);      
+   }   
    // emit html output
    std::cout << "<p>trial key values</p>\n";
    // emit trial key table
@@ -228,12 +236,14 @@ bool autoKey(keyrow table[], const std::string& buf, int p, bool cipherdisk)
    Cipher decryptor;
    FrequencyAnalyzer freqan;
    int n = buf.length();
-   std::string plaintext(buf.length(), ' ');
    for (int i = 0; i < p; i++) {
       // do something
       std::string trial_slice;
-      for (int j = i; j < n; j += p)
+      int idx = 0;
+      for (int j = i; j < n && idx < 200; j += p) {
          trial_slice += buf[j];
+         ++idx;
+      }
       decryptor.readBuf(trial_slice);
       // initialize rundown values
       mindev = ENG_COR;
@@ -254,7 +264,7 @@ bool autoKey(keyrow table[], const std::string& buf, int p, bool cipherdisk)
             }
          }
       }
-      if (mindev > .007)   // bail out if minimum deviation too large
+      if (mindev > .01F)   // bail out if minimum deviation too large
          return false;
       trial_slice = decryptor.AutoAffine("decrypt", best_a, best_b, cipherdisk);
       freqan.readBuffer(trial_slice);
@@ -265,13 +275,19 @@ bool autoKey(keyrow table[], const std::string& buf, int p, bool cipherdisk)
       table[i].ioc = freqan.indexOfCoincidence();
       table[i].cor = freqan.englishCorrelation();
       table[i].n = trial_slice.length();
+   }
+   // decrypt
+   std::string plaintext(n, ' ');
+   for (int i = 0; i < p; i++) {
+      std::string ciphertext_slice;
+      for (int j = i; j < n; j += p)
+         ciphertext_slice += buf[j];
+      decryptor.readBuf(ciphertext_slice);
+      std::string plaintext_slice = decryptor.AutoAffine("decrypt", table[i].a, table[i].b, cipherdisk);
       int idx = 0;
       for (int j = i; j < n; j += p)
-         plaintext[j] = tolower(trial_slice[idx++]);
-   }
-   int substrlen = C * C;
-   if (plaintext.length() < substrlen)
-      substrlen = plaintext.length();
+         plaintext[j] = tolower(plaintext_slice[idx++]);      
+   }   
    // emit html output
    std::cout << "<p>trial key values</p>\n";
    // emit trial key table
