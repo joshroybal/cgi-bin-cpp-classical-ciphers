@@ -10,7 +10,7 @@ void errMsg();
 
 int main()
 {
-   char card[257];   
+   char card[257];
    std::string cipher, flag, keystr;
 
    readQueryString(card);
@@ -43,6 +43,7 @@ int main()
       stripKeyString(keystring);
       // get message
       std::string message = readFormValue(formData, "message");
+      // std::cout << "<p>" << message << "<p>\n";
       stripMessage(message);
 
       // trap for error and show user usage message
@@ -69,7 +70,6 @@ int main()
       
       // check for empty, or too long, keystring
       if (keystring.length() == 0 || keystring.length() > C) {
-         std::cout << "<div>tracer 3</div>\n";
          errMsg();
          printPageBottom();
          return 1;

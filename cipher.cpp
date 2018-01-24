@@ -66,7 +66,7 @@ void Cipher::processBuf(const std::string& cipher, const std::string& flag,
       std::istringstream ss(keystr);
       std::string primary, secondary;
       ss >> primary >> secondary;
-      if (secondary == "") secondary = primary;
+      if (secondary.length() == 0) secondary = primary; 
       Slide(primary, secondary, flag, cipher, autokey, progkey);
    }
    // set to lowercase if flag is decrypt

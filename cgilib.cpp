@@ -15,7 +15,7 @@ std::string readFormValue(const std::string& formData, const std::string& formNa
    std::size_t pos = formData.find(formName);
    if (pos == std::string::npos)
       return "";
-   std::size_t start = pos + formName.length() + 1;     
+   std::size_t start = pos + formName.length() + 1;
    std::string tmp = formData.substr(start);
    std::size_t length = tmp.find('&');
    std::string formValue = formData.substr(start, length);
@@ -41,19 +41,36 @@ void stripMessage(std::string& msg)
       msg.erase(pos, 3);
       pos = msg.find(str);
    }
+   
    // strip blanks (encoded with +)
-   str = "+";
+   // not neccessary with bottom stripping loop
+   /* str = "+";
    pos = msg.find(str);
    while (pos != std::string::npos) {
       msg.erase(pos, 1);
       pos = msg.find(str);
-   }
-   int n = 0;
+   } */
+
+   /* int n = 0;
    while (msg[n] != '\0') {
       if (!isalpha(msg[n])) {
          msg.erase(n, 1);
+         --n;
       }
-      ++n;
+      else
+         ++n;
+   } */
+
+   // more paranoid version of the loop above - both seem to work
+   size_t i = 0;
+   size_t len = msg.length();
+   while (i < len) {
+      if (!isalpha(msg[i]) || msg[i] == ' ' || msg[i] == '\0') {
+         msg.erase(i,1);
+         len--;
+      } else
+         i++;
    }
+
    std::transform(msg.begin(), msg.end(), msg.begin(), ::toupper);
 }
