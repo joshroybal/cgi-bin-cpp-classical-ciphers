@@ -116,7 +116,11 @@ void FrequencyAnalyzer::compute_frequencies()
    for (int i = 0; i < text_buffer.length(); i++) {
       if (isalpha(text_buffer[i])) {
          ++n;
-         int idx = text_buffer[i] - 65;
+         int idx;
+         if (islower(text_buffer[i]))
+            idx = text_buffer[i] - 97;
+         else
+            idx = text_buffer[i] - 65;
          ++(count[idx]);
       }
    }

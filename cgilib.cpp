@@ -22,7 +22,16 @@ std::string readFormValue(const std::string& formData, const std::string& formNa
    return formValue;
 }
 
-// alternative in place version of above function
+// strip cgi control characters from keystring
+void stripKeyString(std::string& keystring)
+{
+   for (int i = 0; i < keystring.length(); i++)
+      if (!isalnum(keystring[i]))
+         keystring[i] = ' ';
+   std::transform(keystring.begin(), keystring.end(), keystring.begin(), ::toupper);
+}
+
+// strip cgi control characters from message
 void stripMessage(std::string& msg)
 {
    // strip special POST form codes from message buffer

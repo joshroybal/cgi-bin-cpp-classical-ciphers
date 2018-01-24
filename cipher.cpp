@@ -431,7 +431,8 @@ void Cipher::Beaufort(const std::string& keystr, const std::string& flag,
    int keylen = keystr.length();
    int key[keylen];
    for (int i = 0; i < keylen; i++)
-      key[i] = keystr[i] - MIN_CHAR + 1;
+      if (isupper(keystr[i]))
+         key[i] = keystr[i] - MIN_CHAR + 1;
    // encrypt/decrypt
    if (autokey) {
       for (int i = 0; i < n; i++) {
@@ -460,8 +461,6 @@ void Cipher::Variant(const std::string& keystr, const std::string& flag,
    int n = inbuf.length();
    int keylen = keystr.length();
    int key[keylen];
-   for (int i = 0; i < keylen; i++)
-      key[i] = atbash(keystr[i]) - MIN_CHAR + 1;
    // determine key array for encryption/decryption
    if (flag == "encrypt")
       for (int i = 0; i < keylen; i++)

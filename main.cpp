@@ -40,7 +40,7 @@ int main()
       std::string action = readFormValue(formData, "action");
       // get keystring
       std::string keystring = readFormValue(formData, "keystring");
-      stripMessage(keystring);
+      stripKeyString(keystring);
       // get message
       std::string message = readFormValue(formData, "message");
       stripMessage(message);
@@ -69,6 +69,7 @@ int main()
       
       // check for empty, or too long, keystring
       if (keystring.length() == 0 || keystring.length() > C) {
+         std::cout << "<div>tracer 3</div>\n";
          errMsg();
          printPageBottom();
          return 1;

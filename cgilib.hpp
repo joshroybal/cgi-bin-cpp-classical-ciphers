@@ -5,6 +5,7 @@
 
 void readQueryString(char []);
 std::string readFormValue(const std::string& formData, const std::string& formName);
+void stripKeyString(std::string&);
 void stripMessage(std::string&);
 
 #endif
