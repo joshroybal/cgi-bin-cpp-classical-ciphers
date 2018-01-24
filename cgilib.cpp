@@ -42,34 +42,16 @@ void stripMessage(std::string& msg)
       pos = msg.find(str);
    }
    
-   // strip blanks (encoded with +)
-   // not neccessary with bottom stripping loop
-   /* str = "+";
-   pos = msg.find(str);
-   while (pos != std::string::npos) {
-      msg.erase(pos, 1);
-      pos = msg.find(str);
-   } */
-
-   /* int n = 0;
-   while (msg[n] != '\0') {
-      if (!isalpha(msg[n])) {
-         msg.erase(n, 1);
-         --n;
-      }
-      else
-         ++n;
-   } */
-
-   // more paranoid version of the loop above - both seem to work
+   // strip non-alphabetic characters from message
    size_t i = 0;
    size_t len = msg.length();
    while (i < len) {
       if (!isalpha(msg[i]) || msg[i] == ' ' || msg[i] == '\0') {
-         msg.erase(i,1);
-         len--;
-      } else
-         i++;
+         msg.erase(i, 1);
+         --len;
+      } 
+      else
+         ++i;
    }
 
    std::transform(msg.begin(), msg.end(), msg.begin(), ::toupper);
